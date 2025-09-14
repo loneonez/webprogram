@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device, initial-scale=1.0">
+  <title>マイリンクページ</title>
+
+  <!-- フォント読み込み -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome（SNSアイコン用） -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <style>
+    /* 背景画像 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Archivo Black', sans-serif;
+      background: url('night.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+
+    /* プロフィール */
+    .profile {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+
+    .name {
+      font-size: 30px;
+      margin-top: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .bio {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #f0f0f0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    /* ヘッダー */
+    header {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 20px;
+    }
+
+    header h1 {
+      display: inline-flex;
+      align-items: center;
+      font-size: 36px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    /* リンクボタン */
+    .link-button {
+      display: block;
+      width: 250px;
+      margin: 20px auto;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+      transition: 0.3s;
+      font-size: 18px;
+    }
+
+    .link-button i {
+      margin-right: 10px; /* アイコンと文字の間 */
+    }
+
+    .link-button:hover {
+      background-color: rgba(0,0,0,0.8);
+      transform: scale(1.05);
+    }
+
+    /* フッター */
+    footer {
+      text-align: center;
+      color: white;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- プロフィール -->
+  <div class="profile">
+    <img src="icon.jpg" alt="" class="icon">
+    <p class="name">lone_onez</p>
+    <p class="bio">2007/01/16     |     isfj</p>
+  </div>
+
+  <!-- リンクボタン -->
+  <a href="https://twitter.com" class="link-button">
+    <i class="fab fa-twitter"></i> Twitter
+  </a>
+
+  <a href="https://www.instagram.com/" class="link-button">
+    <i class="fab fa-instagram"></i> Instagram
+  </a>
+
+  <a href="https://youtube.com" class="link-button">
+    <i class="fab fa-youtube"></i> YouTube
+  </a>
+
+  <a href="https://tiktok.com" class="link-button">
+    <i class="fab fa-tiktok"></i> TikTok
+  </a>
+
+  <!-- フッター -->
+  <footer>
+    &copy; 2025 lone_onez
+  </footer>
+</body>
+</html>

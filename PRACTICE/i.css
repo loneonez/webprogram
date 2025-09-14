@@ -1,0 +1,102 @@
+/* 基本のbody設定 */
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  margin: 0;
+  padding: 0;
+  opacity: 0; /* フェードイン用 */
+  animation: fadeIn 1.5s forwards;
+}
+
+/* プロフィール */
+.profile {
+  text-align: center; /* 中央寄せ */
+  margin-top: 50px;
+}
+
+
+.name {
+  font-family: 'Archivo Black', sans-serif; /* 特別フォント */
+  font-size: 18px;
+  margin-top: 10px;
+  color: white;
+}
+
+.icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /*丸くする*/
+  border: 3px solid white; /*白い枠線*/
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+.bio {
+  font-size: 16px;
+  margin-top: 5px;
+  color: #f0f0f0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 見出し */
+h1, h2 {
+  font-family: 'Archivo Black', sans-serif;
+}
+
+/* リンクボタン */
+.link-button {
+  display: block;
+  width: 250px;
+  margin: 20px auto;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  font-size: 18px;
+
+  /* フェードイン＋ふわふわアニメーション */
+  animation: float 3s ease-in-out infinite;
+  transition: 0.3s;
+}
+
+.link-button i {
+  margin-right: 10px; /* アイコンと文字の間 */
+}
+
+/* ホバー時 */
+.link-button:hover {
+  background-color: rgba(0,0,0,0.8);
+  transform: scale(1.05);
+}
+
+/* フェードインアニメーション */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* リンクボタンふわふわ */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* スマホ画面対応 */
+@media (max-width: 600px) {
+  .link-button {
+    width: 90%;
+    font-size: 16px;
+  }
+.icon {
+    width: 80px;
+    height: 80px;
+  
+  }
+
+  header h1 {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,41 @@
+body {
+  font-family: "Hiragino Sans", "Arial", sans-serif;
+  line-height: 1.8;
+  background: #fdfdfd;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 60%;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.2em;
+}
+
+.meta {
+  color: #888;
+  font-size: 0.9em;
+}
+
+h2 {
+  margin-top: 1.5em;
+  color: #0073e6;
+}
+
+.sns a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: #0073e6;
+}
+.sns a:hover {
+  text-decoration: underline;
+}
