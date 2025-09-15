@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>HTMLタグ復習用</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 10px;
+      line-height: 1.5;
+      background-color: #f9f9f9;
+    }
+    pre {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    .comment { color: #007700; } /* コメントは緑色で見やすく */
+  </style>
+</head>
+<body>
+
+<h1>HTMLタグ復習用（意味だけ表示）</h1>
+
+<pre>
+&lt;!DOCTYPE html&gt; <span class="comment">// HTML5文書であることを宣言</span>
+&lt;html lang="ja"&gt; <span class="comment">// HTML文書の開始、言語は日本語</span>
+
+&lt;head&gt; <span class="comment">// 頭。設定やCSS, JS読み込み</span>
+  &lt;meta charset="UTF-8"&gt; <span class="comment">// 文字コード指定</span>
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; <span class="comment">// スマホ対応</span>
+  &lt;title&gt;ページタイトル&lt;/title&gt; <span class="comment">// ブラウザタブに表示</span>
+  &lt;link rel="stylesheet" href="style.css"&gt; <span class="comment">// 外部CSS読み込み</span>
+&lt;/head&gt;
+
+&lt;body&gt; <span class="comment">// 本文、画面に表示される内容</span>
+
+  &lt;header&gt; <span class="comment">// ヘッダー、ページ上部情報</span>
+    &lt;h1&gt;見出し1&lt;/h1&gt; <span class="comment">// 最重要見出し</span>
+    &lt;h2&gt;見出し2&lt;/h2&gt; <span class="comment">// サブ見出し</span>
+  &lt;/header&gt;
+
+  &lt;nav&gt; <span class="comment">// ナビゲーションメニュー</span>
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;リンク1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;リンク2&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt; <span class="comment">// メインコンテンツ</span>
+    &lt;section&gt; <span class="comment">// 内容のまとまり</span>
+      &lt;h2&gt;セクション見出し&lt;/h2&gt;
+      &lt;p&gt;段落。文章を書く場所&lt;/p&gt;
+      &lt;strong&gt;強調&lt;/strong&gt;, &lt;em&gt;イタリック&lt;/em&gt;
+      &lt;small&gt;小さい文字&lt;/small&gt;, &lt;mark&gt;マークアップ文字&lt;/mark&gt;
+      &lt;a href="#"&gt;リンク&lt;/a&gt;
+      &lt;img src="image.jpg" alt="画像説明"&gt;
+      &lt;figure&gt;
+        &lt;img src="figure.jpg" alt="図の説明"&gt;
+        &lt;figcaption&gt;図のキャプション&lt;/figcaption&gt;
+      &lt;/figure&gt;
+    &lt;/section&gt;
+
+    &lt;article&gt; <span class="comment">// 記事コンテンツ</span>
+      &lt;h2&gt;記事タイトル&lt;/h2&gt;
+      &lt;p&gt;記事本文&lt;/p&gt;
+    &lt;/article&gt;
+
+    &lt;aside&gt; <span class="comment">// サイド情報や補足</span>
+      &lt;p&gt;補足情報や広告など&lt;/p&gt;
+    &lt;/aside&gt;
+
+    &lt;details&gt; <span class="comment">// 折りたたみ</span>
+      &lt;summary&gt;クリックで開く内容&lt;/summary&gt;
+      &lt;p&gt;折りたたみ内容&lt;/p&gt;
+    &lt;/details&gt;
+
+    &lt;dialog open&gt; <span class="comment">// ダイアログ（モーダル）</span>
+      &lt;p&gt;ダイアログ内容&lt;/p&gt;
+    &lt;/dialog&gt;
+
+    &lt;progress value="70" max="100"&gt;&lt;/progress&gt; <span class="comment">// 進捗バー</span>
+    &lt;meter value="0.6"&gt;60%&lt;/meter&gt; <span class="comment">// メーター表示</span>
+
+    &lt;form&gt; <span class="comment">// 入力フォーム</span>
+      &lt;label for="name"&gt;名前:&lt;/label&gt;
+      &lt;input type="text" id="name" name="name" placeholder="名前を入力"&gt;
+      &lt;input type="number" name="age" min="0" max="120"&gt;
+      &lt;input type="email" name="email"&gt;
+      &lt;textarea name="message" placeholder="メッセージ"&gt;&lt;/textarea&gt;
+      &lt;select name="option"&gt;
+        &lt;option value="A"&gt;選択肢A&lt;/option&gt;
+        &lt;option value="B"&gt;選択肢B&lt;/option&gt;
+      &lt;/select&gt;
+      &lt;input type="checkbox" name="check" checked&gt; チェックボックス
+      &lt;input type="radio" name="radio"&gt; ラジオボタン
+      &lt;button type="submit"&gt;送信&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;table&gt; <span class="comment">// 表</span>
+      &lt;thead&gt;&lt;tr&gt;&lt;th&gt;見出し1&lt;/th&gt;&lt;th&gt;見出し2&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+      &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;データ1&lt;/td&gt;&lt;td&gt;データ2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;
+      &lt;tfoot&gt;&lt;tr&gt;&lt;td&gt;合計1&lt;/td&gt;&lt;td&gt;合計2&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
+    &lt;/table&gt;
+
+    &lt;blockquote&gt;引用文&lt;/blockquote&gt;
+    &lt;code&gt;コード表示&lt;/code&gt;
+    &lt;pre&gt;整形済みテキスト&lt;/pre&gt;
+    &lt;abbr title="HyperText Markup Language"&gt;HTML&lt;/abbr&gt; <span class="comment">// 略語</span>
+    &lt;cite&gt;参考文献名&lt;/cite&gt;
+    &lt;time datetime="2025-09-15"&gt;2025年9月15日&lt;/time&gt;
+
+    &lt;span&gt;インライン要素&lt;/span&gt;
+    &lt;div&gt;ブロック要素&lt;/div&gt;
+
+  &lt;/main&gt;
+
+  &lt;footer&gt; &lt;p&gt;© 2025 ゆうたの復習ページ&lt;/p&gt; &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</body>
+</html>

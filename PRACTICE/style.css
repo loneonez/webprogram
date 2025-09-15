@@ -1,0 +1,37 @@
+/* 全体 */
+body {
+  font-family: "メイリオ", sans-serif;
+  text-align: center;
+}
+
+/* タイトル */
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* 表 */
+table {
+  border-collapse: collapse; /* 線を重ねる */
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* ヘッダー行 */
+thead th {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+}
+
+/* 各セル */
+td, th {
+  border: 1px solid #333;
+  padding: 10px;
+  text-align: center;
+}
+
+/* 偶数行の色を変える */
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

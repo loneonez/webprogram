@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>時間割ジェネレーター</title>
+  <style>
+    :root{
+      --accent: #6c5ce7;
+      --bg: #f7f7fb;
+      --card-radius: 10px;
+      font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#222;
+      padding:18px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    h1{ margin:0; font-size:1.2rem; }
+    .controls{ display:flex; gap:8px; align-items:center; }
+
+    /* layout */
+    .container{
+      display:grid;
+      grid-template-columns: 200px 1fr;
+      gap:16px;
+    }
+    @media (max-width:900px){
+      .container{ grid-template-columns: 1fr; }
+    }
+
+    /* sidebar (form) */
+    .card{
+      background:white;
+      padding:12px;
+      border-radius:var(--card-radius);
+      box-shadow:0 6px 18px rgba(10,10,20,0.06);
+    }
+    label{ display:block; font-size:0.85rem; margin-top:8px; }
+    input, select, button{ width:100%; padding:8px; margin-top:6px; border-radius:8px; border:1px solid #e6e6ee; box-sizing:border-box; }
+    button.primary{ background:var(--accent); color:white; border:0; cursor:pointer; }
+    .small{ width:auto; padding:6px 10px; font-size:0.9rem; }
+
+    /* timetable grid */
+    .timetable-wrap{ overflow:auto; }
+    .timetable{
+      min-width:800px;
+      background:white;
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 8px 26px rgba(10,10,20,0.06);
+      display:grid;
+      grid-template-columns: 80px repeat(6, 1fr); /* 6 columns: Mon-Sat */
+      gap:6px;
+      align-items:start;
+    }
+    .time-col{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .cell{
+      min-height:48px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#fbfbff,#fff);
+      border:1px dashed #f0f0f6;
+      padding:6px;
+      position:relative;
+      font-size:0.85rem;
+      color:#444;
+    }
+    .header-cell{ font-weight:700; text-align:center; background:transparent; border:0; min-height:40px; }
+    .slot-time{ font-size:0.8rem; color:#888; height:48px; display:flex; align-items:center; justify-content:center; }
+
+    /* event card */
+    .event{
+      position:absolute;
+      left:6px;
+      right:6px;
+      top:6px;
+      bottom:6px;
+      padding:6px;
+      border-radius:8px;
+      color:white;
+      font-weight:600;
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      align-items:center;
+      box-shadow:0 4px 10px rgba(10,10,20,0.08);
+      cursor:pointer;
+    }
+    .event .meta{ font-size:0.75rem; opacity:0.95; font-weight:500; }
+    .event .actions{ display:flex; gap:6px; align-items:center; }
+
+    /* tiny helpers */
+    .muted{ color:#666; font-size:0.95rem; }
+    .row{ display:flex; gap:8px; align-items:center; margin-top:10px; }
+    .flex{ display:flex; gap:8px; }
+    .color-swatch{ width:22px; height:22px; border-radius:6px; border:1px solid rgba(0,0,0,0.06); }
+    .footer-note{ margin-top:10px; color:#666; font-size:0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>時間割ジェネレーター</h1>
+    <div class="controls">
+      <button id="exportBtn" class="small">エクスポート</button>
+      <button id="importBtn" class="small">インポート</button>
+      <button id="clearBtn" class="small">全部消す</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <aside class="card" style="height:max-content;">
+      <strong>授業を追加</strong>
+      <label>科目名<input id="title" placeholder="例：経済学部" /></label>
+      <label>教室 / メモ<input id="place" placeholder="例：教室A-101" /></label>
+      <label>曜日
+        <select id="day">
+          <option value="1">月</option>
+          <option value="2">火</option>
+          <option value="3">水</option>
+          <option value="4">木</option>
+          <option value="5">金</option>
+          <option value="6">土</option>
+        </select>
+      </label>
+      <div style="display:flex; gap:8px;">
+        <div style="flex:1">
+          <label>開始時刻
+            <input id="start" type="time" value="09:00" />
+          </label>
+        </div>
+        <div style="flex:1">
+          <label>終了時刻
+            <input id="end" type="time" value="10:30" />
+          </label>
+        </div>
+      </div>
+      <label>色
+        <input id="color" type="color" value="#ff7675" />
+      </label>
+
+      <div class="row">
+        <button id="addBtn" class="primary">追加する</button>
+        <button id="resetForm" class="small">クリア</button>
+      </div>
+
+      <div class="footer-note">
+        追加した時間割はこのブラウザに自動保存されます。別端末に移すときはエクスポートを使ってね。
+      </div>
+    </aside>
+
+    <section>
+      <div class="timetable-wrap">
+        <div class="timetable" id="timetable">
+          <!-- header column -->
+          <div class="header-cell"></div>
+          <div class="header-cell">月</div>
+          <div class="header-cell">火</div>
+          <div class="header-cell">水</div>
+          <div class="header-cell">木</div>
+          <div class="header-cell">金</div>
+          <div class="header-cell">土</div>
+
+          <!-- time column + slots -->
+          <!-- We'll generate times in JS from 8:00 to 21:00 with 30min steps -->
+          <!-- Left column: times -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <input id="fileInput" type="file" accept=".json" style="display:none;" />
+
+  <script>
+    // --- config
+    const startHour = 8;
+    const endHour = 21;
+    const stepMinutes = 30; // 30-min grid
+    const storageKey = 'youta_timetable_v1';
+
+    // DOM
+    const timetable = document.getElementById('timetable');
+    const addBtn = document.getElementById('addBtn');
+    const titleIn = document.getElementById('title');
+    const placeIn = document.getElementById('place');
+    const dayIn = document.getElementById('day');
+    const startIn = document.getElementById('start');
+    const endIn = document.getElementById('end');
+    const colorIn = document.getElementById('color');
+    const clearBtn = document.getElementById('clearBtn');
+    const resetForm = document.getElementById('resetForm');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    // In-memory events
+    let events = [];
+
+    // Utility: format time string "HH:MM"
+    function toMinutes(t){
+      const [h,m] = t.split(':').map(Number);
+      return h*60 + m;
+    }
+    function minutesToHHMM(min){
+      const h = Math.floor(min/60).toString().padStart(2,'0');
+      const m = (min%60).toString().padStart(2,'0');
+      return `${h}:${m}`;
+    }
+
+    // Build grid rows (time labels + cells)
+    function buildGrid(){
+      // clear previous time rows (keep headers)
+      // timetable has header row already inserted, now add rows for each time slot
+      const cols = 7; // 1 time col + 6 days
+      const totalSlots = ((endHour - startHour) * 60) / stepMinutes;
+      for(let i=0;i<totalSlots;i++){
+        const tMin = startHour*60 + i*stepMinutes;
+        // time label column
+        const timeCell = document.createElement('div');
+        timeCell.className = 'cell slot-time';
+        timeCell.dataset.slotIndex = i;
+        timeCell.innerText = minutesToHHMM(tMin);
+        timetable.appendChild(timeCell);
+        // day cells (6 days)
+        for(let d=1; d<=6; d++){
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.day = d;
+          cell.dataset.slot = i;
+          cell.style.position = 'relative';
+          timetable.appendChild(cell);
+        }
+      }
+    }
+
+    // Render events on grid
+    function render(){
+      // first clear existing event elements
+      document.querySelectorAll('.event').forEach(n => n.remove());
+
+      // place each event
+      events.forEach(ev => {
+        // compute row start & span in slots
+        const evStart = toMinutes(ev.start);
+        const evEnd = toMinutes(ev.end);
+        const gridStartMin = startHour*60;
+        // ignore events outside range
+        if(evEnd <= gridStartMin || evStart >= endHour*60) return;
+
+        const startSlot = Math.max(0, Math.floor((evStart - gridStartMin)/stepMinutes));
+        const endSlot = Math.min(((endHour-startHour)*60)/stepMinutes, Math.ceil((evEnd - gridStartMin)/stepMinutes));
+        const spanSlots = Math.max(1, endSlot - startSlot);
+
+        // find the target cell for the startSlot and day
+        // timetable children are: 1(header)+6(headers) + then rows of (1 time + 6 day cells)
+        // compute index: headerCells = 7, then for row r: base = 7 + r*7
+        const rowIndex = startSlot;
+        const baseIdx = 7 + rowIndex*7;
+        const dayOffset = Number(ev.day); // 1..6
+        const targetCell = timetable.children[baseIdx + dayOffset];
+
+        if(!targetCell) return;
+
+        // create event element positioned to span multiple slots visually by setting height
+        const eventEl = document.createElement('div');
+        eventEl.className = 'event';
+        eventEl.style.background = ev.color || '#6c5ce7';
+        eventEl.dataset.id = ev.id;
+
+        // Calculate height: cell height ~ 48px + gap. We'll approximate by spanning absolute pixels.
+        const cellHeight = targetCell.getBoundingClientRect().height || 48;
+        const gap = 6;
+        const totalHeight = spanSlots * (cellHeight + gap) - gap - 12; // adjust for padding
+        eventEl.style.height = totalHeight + 'px';
+        eventEl.style.top = '6px';
+        eventEl.style.bottom = 'auto';
+
+        // content
+        const left = document.createElement('div');
+        left.innerHTML = `<div>${ev.title}</div><div class="meta" style="font-weight:600; opacity:0.9">${ev.place || ''}</div>`;
+        const right = document.createElement('div');
+        right.className = 'actions';
+        right.innerHTML = `<div class="meta">${ev.start}〜${ev.end}</div><button data-action="edit" title="編集" class="small">✎</button><button data-action="del" title="削除" class="small">×</button>`;
+
+        eventEl.appendChild(left);
+        eventEl.appendChild(right);
+
+        // append to the start cell (absolute position)
+        targetCell.appendChild(eventEl);
+
+        // event listeners
+        eventEl.addEventListener('click', (e)=>{
+          const act = e.target.closest('button')?.dataset.action;
+          if(act === 'edit'){ openEdit(ev.id); e.stopPropagation(); }
+          else if(act === 'del'){ if(confirm('削除していい？')) { removeEvent(ev.id); } e.stopPropagation(); }
+        });
+      });
+    }
+
+    // Open Edit (populate form with event)
+    function openEdit(id){
+      const ev = events.find(x=>x.id===id);
+      if(!ev) return;
+      titleIn.value = ev.title;
+      placeIn.value = ev.place || '';
+      dayIn.value = ev.day;
+      startIn.value = ev.start;
+      endIn.value = ev.end;
+      colorIn.value = ev.color || '#ff7675';
+      // remove old one and let user re-add as save
+      removeEvent(id, false);
+      window.scrollTo({top:0, behavior:'smooth'});
+      titleIn.focus();
+    }
+
+    function removeEvent(id, save=true){
+      events = events.filter(x=>x.id!==id);
+      if(save) saveToStorage();
+      render();
+    }
+
+    // Save/load
+    function saveToStorage(){
+      localStorage.setItem(storageKey, JSON.stringify(events));
+    }
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem(storageKey);
+        if(raw) events = JSON.parse(raw);
+        else events = [];
+      }catch(e){ events = []; }
+    }
+
+    // Add event from form
+    addBtn.addEventListener('click', ()=>{
+      const title = titleIn.value.trim();
+      const place = placeIn.value.trim();
+      const day = dayIn.value;
+      const start = startIn.value;
+      const end = endIn.value;
+      const color = colorIn.value;
+
+      if(!title){ alert('科目名を入れてな〜'); titleIn.focus(); return; }
+      if(!start || !end){ alert('開始/終了時刻を入れて'); return; }
+      if(toMinutes(end) <= toMinutes(start)){ alert('終了時刻は開始より後にしてや'); return; }
+
+      const id = 'e_' + Date.now() + '_' + Math.floor(Math.random()*999);
+      events.push({ id, title, place, day, start, end, color });
+      saveToStorage();
+      render();
+      // clear inputs except color
+      titleIn.value=''; placeIn.value=''; startIn.value='09:00'; endIn.value='10:30';
+      titleIn.focus();
+    });
+
+    resetForm.addEventListener('click', ()=>{
+      titleIn.value=''; placeIn.value=''; startIn.value='09:00'; endIn.value='10:30';
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      if(confirm('全部消す？元に戻せへんで！')){ events = []; saveToStorage(); render(); }
+    });
+
+    // Export / Import
+    exportBtn.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(events,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'timetable.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    importBtn.addEventListener('click', ()=> fileInput.click());
+    fileInput.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const imported = JSON.parse(reader.result);
+          if(Array.isArray(imported)){
+            if(confirm('読み込むと現在の時間割は上書きされます。よろしい？')){
+              events = imported;
+              saveToStorage();
+              render();
+            }
+          } else alert('不正なフォーマットやで');
+        }catch(err){ alert('読み込みでエラーや: ' + err.message); }
+      };
+      reader.readAsText(f);
+      fileInput.value = '';
+    });
+
+    // init
+    function init(){
+      buildGrid();
+      loadFromStorage();
+      // small delay to ensure cell sizes exist for height calc
+      setTimeout(render, 100);
+    }
+    init();
+
+    // make grid responsive to resize so event heights recompute
+    window.addEventListener('resize', () => setTimeout(render, 120));
+  </script>
+</body>
+</html>

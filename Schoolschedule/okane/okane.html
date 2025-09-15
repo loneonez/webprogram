@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お小遣い管理アプリ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    #balance {
+      font-size: 32px;
+      margin-bottom: 50px;
+    }
+    #amount {
+      font-size: 48px;
+      margin: 50px 0;
+    }
+    button {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="balance">残高: ¥0</div>
+  <div id="amount">+0</div>
+
+  <button onclick="addMoney()">収入を追加</button>
+  <button onclick="spendMoney()">支出を追加</button>
+
+  <script>
+    // LocalStorageから残高を取得（なければ0）
+    let balance = Number(localStorage.getItem('balance')) || 0;
+    updateBalance(0);
+
+    function updateBalance(latestAmount) {
+      balance += latestAmount;
+      document.getElementById('balance').innerText = `残高: ¥${balance}`;
+      document.getElementById('amount').innerText = (latestAmount >= 0 ? '+' : '') + latestAmount;
+      // LocalStorageに保存
+      localStorage.setItem('balance', balance);
+    }
+
+    function addMoney() {
+      const amount = Number(prompt('収入額を入力してね'));
+      if (!isNaN(amount)) {
+        updateBalance(amount);
+      }
+    }
+
+    function spendMoney() {
+      const amount = Number(prompt('支出額を入力してね'));
+      if (!isNaN(amount)) {
+        updateBalance(-amount);
+      }
+    }
+  </script>
+
+</body>
+</html>
